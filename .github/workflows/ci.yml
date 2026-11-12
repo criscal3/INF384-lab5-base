@@ -20,3 +20,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+  iac:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install checkov
+      - run: >
+          checkov -d infra --compact
+          --hard-fail-on CKV_AWS_53,CKV_AWS_54,CKV_AWS_55,CKV_AWS_56,CKV_AWS_70,CKV2_AWS_6
+      

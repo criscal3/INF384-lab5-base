@@ -106,10 +106,10 @@ El impacto se puede resumir en los siguientes hechos:
 
 ### Decisión 1 · Qué bloquea y qué informa
 
-- Decisión:
-- Dato del repositorio que la sustenta:
-- Alternativa descartada y por qué:
-- Posición en minoría:
+- Decisión: En Checkov se bloquean los seis checks de exposición pública del bucket de comprobantes (CKV_AWS_53, CKV_AWS_54, CKV_AWS_55, CKV_AWS_56, CKV_AWS_70 y CKV2_AWS_6) y se informan los demás hallazgos. En Trivy se bloquean las vulnerabilidades HIGH y CRITICAL que tienen versión corregida, y se informan las de menor severidad y las que no tienen versión corregida.
+- Dato del repositorio que la sustenta: Checkov reporta 28 hallazgos sobre infra/; 12 corresponden al bucket de comprobantes y 6 de ellos, los de exposición pública, fueron introducidos por bd600fe y causaron el incidente. Trivy reporta 5 vulnerabilidades en package-lock.json: 4 en lodash 4.17.20 (CVE-2021-23337 y CVE-2026-4800, HIGH; CVE-2020-28500 y CVE-2025-13465, MEDIUM) y 1 en ip 2.0.1 (CVE-2024-29415, HIGH, sin versión corregida). Bloquean: CKV_AWS_53, CKV_AWS_54, CKV_AWS_55, CKV_AWS_56, CKV_AWS_70, CKV2_AWS_6, CVE-2021-23337 y CVE-2026-4800.
+- Alternativa descartada y por qué: Bloquear todos los hallazgos de ambas herramientas. Los 22 hallazgos restantes de Checkov (cifrado con KMS, replicación, trazas y VPC de la Lambda, entre otros) no están relacionados con el incidente y su corrección requiere cambios de infraestructura que no pueden validarse sin desplegar. Bloquearlos detendría el pipeline sin distinguir la exposición crítica del resto.
+- Posición en minoría: Bloquear también CKV_AWS_18 (registros de acceso), porque su ausencia es la causa de que el impacto del incidente no pueda medirse.
 
 ### Decisión 2 · La vulnerabilidad sin versión corregida
 

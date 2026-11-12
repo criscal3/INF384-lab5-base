@@ -139,10 +139,12 @@ El impacto se puede resumir en los siguientes hechos:
 
 | Evidencia | Link |
 |---|---|
-| Run fallido: el gate detiene el bucket público | |
+| Run fallido: el gate detiene el bucket público | https://github.com/criscal3/INF384-lab5-base/actions/runs/43317858206 |
 | Run en verde en `main` después de las correcciones | |
-| Pull requests del equipo | |
+| Pull requests del equipo | https://github.com/criscal3/INF384-lab5-base/pull/1<br>https://github.com/criscal3/INF384-lab5-base/pull/2<br>https://github.com/criscal3/INF384-lab5-base/pull/3<br>https://github.com/criscal3/INF384-lab5-base/pull/4 |
 
 ## Declaración de uso de IA
 
 Herramientas usadas y para qué se usó cada una:
+
+- Claude (Anthropic): se usó como corrector de estilo de DECISIONES.md, para revisar la redacción, la ortografía y la claridad de los textos escritos por el equipo.

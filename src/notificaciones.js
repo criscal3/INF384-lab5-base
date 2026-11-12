@@ -1,4 +1,5 @@
 const net = require('net');
+const ip = require('ip');
 
 const comercios = new Map();
 
@@ -16,7 +17,7 @@ function validarUrlNotificacion(valor) {
   if (host === 'localhost') {
     return { ok: false, error: 'destino interno' };
   }
-    // Control compensatorio de la excepcion CVE-2024-29415 (Decision 2):
+  // Control compensatorio de la excepcion CVE-2024-29415 (Decision 2):
   // no se aceptan IP literales, asi ip.isPrivate no evalua datos del comercio.
   if (net.isIP(host)) {
     return { ok: false, error: 'ip literal no permitida' };

@@ -14,9 +14,6 @@ resource "aws_lambda_function" "api" {
   # Control compensatorio de la excepcion CKV_AWS_258 (Decision 3).
   reserved_concurrent_executions = 50
 
-  # Control compensatorio: limitar ejecuciones simultaneas
-  reserved_concurrent_executions = 5
-
   environment {
     variables = {
       BUCKET_COMPROBANTES = aws_s3_bucket.comprobantes.bucket

@@ -27,8 +27,36 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install checkov
+      - run: pip install checkov==3.4.5
       - run: >
           checkov -d infra --compact
           --hard-fail-on CKV_AWS_53,CKV_AWS_54,CKV_AWS_55,CKV_AWS_56,CKV_AWS_70,CKV2_AWS_6
-      
+
+sca:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    # Decision 1: informar todas las vulnerabilidades de package-lock.json.
+    # No usa .trivyignore.bloqueo, para que la excepcion siga visible en el log.
+    - name: Trivy (informa)
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: fs
+        scan-ref: package-lock.json
+        scanners: vuln
+        severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+        exit-code: '0'
+        format: table
+    # Decision 1: bloquear HIGH y CRITICAL con version corregida.
+    # Decision 2: la excepcion de CVE-2024-29415 esta en .trivyignore.bloqueo.
+    - name: Trivy (bloquea)
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+        scan-type: fs
+        scan-ref: package-lock.json
+        scanners: vuln
+        severity: HIGH,CRITICAL
+        ignore-unfixed: true
+        trivyignores: .trivyignore.bloqueo
+        exit-code: '1'
+        format: table

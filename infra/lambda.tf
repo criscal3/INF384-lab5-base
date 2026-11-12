@@ -1,3 +1,4 @@
+
 resource "aws_cloudwatch_log_group" "api" {
   name              = "/aws/lambda/${var.proyecto}-api-${var.ambiente}"
   retention_in_days = 7
@@ -12,6 +13,9 @@ resource "aws_lambda_function" "api" {
   memory_size   = 256
   # Control compensatorio de la excepcion CKV_AWS_258 (Decision 3).
   reserved_concurrent_executions = 50
+
+  # Control compensatorio: limitar ejecuciones simultaneas
+  reserved_concurrent_executions = 5
 
   environment {
     variables = {

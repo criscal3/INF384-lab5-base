@@ -1,5 +1,4 @@
 const net = require('net');
-const ip = require('ip');
 
 const comercios = new Map();
 

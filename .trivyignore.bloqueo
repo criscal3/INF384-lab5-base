@@ -1,0 +1,6 @@
+# Excepcion CVE-2024-29415 (ip 2.0.1, sin version corregida). Decision 2.
+# Responsable: desarrolladores backend
+# Vencimiento: 2026-12-31 (si no existe version corregida, se reemplaza la libreria)
+# Control compensatorio: validarUrlNotificacion (src/notificaciones.js) rechaza hosts que sean IP literales
+# Riesgo aceptado: posible SSRF en POST /comercios/notificacion si falla la validacion
+CVE-2024-29415 exp:2026-12-31

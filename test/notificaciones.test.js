@@ -25,3 +25,8 @@ test('registra la url del comercio', () => {
   assert.strictEqual(r.ok, true);
   assert.strictEqual(urlDeComercio('bodega-lucha'), 'https://bodega.example.com/aviso');
 });
+
+test('rechaza ip literales publicas (control compensatorio CVE-2024-29415)', () => {
+  assert.strictEqual(validarUrlNotificacion('https://8.8.8.8/pagos').ok, false);
+  assert.strictEqual(validarUrlNotificacion('https://[::ffff:7f00:1]/pagos').ok, false);
+});

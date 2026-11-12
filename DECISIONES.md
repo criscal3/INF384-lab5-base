@@ -2,14 +2,14 @@
 
 ## Equipo
 
-Número de equipo:
+Número de equipo: 4
 
 | Código PUCP | Nombre | Rol | Usuario de GitHub |
 |---|---|---|---|
-| | | Moderador | |
-| | | Escriba | |
-| | | Abogado del diablo | |
-| | | Guardián del tiempo | |
+| 20221029 | Cristian Smith Calderon Barrial | Moderador | criscal3 |
+| 20201230 | Rodrigo Alonso Sanchez Pastor | Escriba | Rodrigo Armot |
+| 20211729 | Lhía Hurtado Claros | Abogado del diablo | LhiaHC |
+| 20220825 | Alfredo Ernesto Sanchez Tuesta | Guardián del tiempo | Alfredo123255 |
 | | | Integrador | |
 
 ## A1 · Postmortem

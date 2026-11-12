@@ -1,5 +1,4 @@
 const net = require('net');
-const ip = require('ip');
 
 const comercios = new Map();
 
@@ -17,8 +16,8 @@ function validarUrlNotificacion(valor) {
   if (host === 'localhost') {
     return { ok: false, error: 'destino interno' };
   }
-  if (net.isIP(host) && ip.isPrivate(host)) {
-    return { ok: false, error: 'destino interno' };
+  if (net.isIP(host)) {
+  return { ok: false, error: 'destino interno' };
   }
   return { ok: true, url: url.toString() };
 }

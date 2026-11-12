@@ -113,23 +113,27 @@ El impacto se puede resumir en los siguientes hechos:
 
 ### Decisión 2 · La vulnerabilidad sin versión corregida
 
-- Decisión:
-- Dato del repositorio que la sustenta:
-- Alternativa descartada y por qué:
-- Posición en minoría:
+- Decisión: Abrir una excepción para CVE-2024-29415 en .trivyignore, mantener ip 2.0.1 y reemplazarla por la versión corregida cuando se publique. Responsable: desarrolladores backend. Vencimiento: 31/12/2026; en esa fecha, si no existe versión corregida, se reemplazará la librería. Control compensatorio: validarUrlNotificacion rechazará las URL cuyo host sea una dirección IP literal, de modo que ip.isPrivate no evalúe direcciones ingresadas por los comercios; además, el job sca seguirá informando la vulnerabilidad en cada run hasta que exista la corrección. Riesgo aceptado: mientras la librería permanezca, una falla en la validación podría permitir registrar una URL de notificación hacia una dirección interna (SSRF).
+- Dato del repositorio que la sustenta: CVE-2024-29415 en ip 2.0.1 (package-lock.json), sin versión corregida. Se usa en src/notificaciones.js, función validarUrlNotificacion, línea 20 (ip.isPrivate(host)).
+- Alternativa descartada y por qué: Bloquear los despliegues hasta que exista una versión corregida, porque no hay fecha prevista para el parche y el bloqueo detendría también la corrección del bucket. Reemplazar la librería se descartó por el riesgo de introducir regresiones en un control de seguridad durante la sesión.
+- Posición en minoría: Reemplazar ip por net.BlockList, el módulo nativo de Node.js, porque la librería se usa en un único punto y la función afectada es precisamente el control contra SSRF.
 
 ### Decisión 3 · La Function URL sin autenticación
 
-- Decisión:
-- Dato del repositorio que la sustenta:
-- Alternativa descartada y por qué:
-- Posición en minoría:
+- Decisión: Abrir una excepción para CKV_AWS_258 con #checkov:skip dentro de aws_lambda_function_url.api. Responsable: líder técnico. Vencimiento: 31/12/2026; antes de esa fecha se ubicará la API detrás de un punto de entrada con autorización que valide el token del servicio de autenticación. Control compensatorio: concurrencia reservada en aws_lambda_function.api para acotar el volumen de invocaciones no autorizadas, y revisión de los registros de aws_cloudwatch_log_group.api. Riesgo aceptado: la Function URL puede ser invocada por cualquier cliente de Internet, y la API no valida la identidad del usuario por sí misma.
+- Dato del repositorio que la sustenta: CKV_AWS_258 sobre aws_lambda_function_url.api (infra/lambda.tf, líneas 27 a 30), con authorization_type = "NONE".
+- Alternativa descartada y por qué: Corregir con authorization_type = "AWS_IAM". La app móvil consume la Function URL directamente y no firma sus solicitudes con credenciales de AWS, por lo que el cambio la dejaría sin servicio.
+- Posición en minoría: Corregir de inmediato, porque src/handler.js no valida ningún token y el riesgo aceptado afecta a operaciones de saldo y transferencias.
 
 ## A3 · Dato nuevo
 
 - Qué cambia en el postmortem:
-- Qué cambia en las decisiones:
-- Respuesta del equipo al pedido recibido:
+  - Impacto: la penalidad queda cuantificada en S/ 15 000 por cada día sin acceso. Desde el lunes 09/11 a las 09:25 se acumulan cuatro días (09/11 al 12/11), equivalentes a S/ 60 000 si el acceso no se restablece hoy.
+  - Línea de tiempo: se agrega la fila "Jue 12/11 · 16:40 · El proveedor de conciliación exige acceso en el día. Gerencia solicita el nombre de quien realizó el cambio".
+  - Acciones: la corrección de infra/s3.tf (unidad 3) pasa a ser la vía para restablecer el acceso hoy. El terraform plan de verificación se adelanta del 16/11 al 12/11 y queda a cargo del líder técnico, en lugar de la ingeniera de plataforma, que está de vacaciones hasta el 13/11. El apply de hoy se ejecutará solo después de que el pull request esté aprobado, el job iac esté en verde y el plan muestre únicamente dos cambios: los cuatro controles del public access block en true y la política restringida a arn:aws:iam::111122223333:role/conciliacion-lectura.
+  - Causas: el dato confirma la causa 5. El conflicto entre un plazo contractual y un control de seguridad se repite, y esta vez se resuelve con el procedimiento de escalamiento y no omitiendo el control.
+- Qué cambia en las decisiones: Ninguna de las tres decisiones se modifica. La urgencia del proveedor no justifica relajar la Decisión 1: el acceso de mínimo privilegio al rol conciliacion-lectura no usa Principal = "*", por lo que supera CKV_AWS_70 y los demás checks de exposición pública sin abrir ninguna excepción. Restablecer el acceso hoy y mantener el bloqueo no se contradicen.
+- Respuesta del equipo al pedido recibido: El postmortem no identificará a la persona que realizó el cambio. Su análisis muestra que el incidente fue posible por condiciones del sistema: la rama main no exigía revisión, el pipeline no evaluaba infra/, el despliegue era manual, no existía monitoreo sobre el bucket y no había un procedimiento para escalar el conflicto entre el plazo contractual y la seguridad. En esas condiciones, cualquier integrante del equipo que recibiera la misma tarea con el mismo plazo podía producir el mismo resultado. Sancionar a una persona no corrige ninguna de esas condiciones y desalentaría que los próximos incidentes se reporten con transparencia. En su lugar, el equipo entrega a gerencia el plan de acciones, con un rol responsable y una fecha límite para cada una, y se compromete a restablecer hoy el acceso del proveedor con mínimo privilegio.
 
 ## Parte B · Evidencia
 

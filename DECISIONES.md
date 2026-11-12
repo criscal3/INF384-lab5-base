@@ -140,8 +140,12 @@ El impacto se puede resumir en los siguientes hechos:
 | Evidencia | Link |
 |---|---|
 | Run fallido: el gate detiene el bucket público | https://github.com/criscal3/INF384-lab5-base/actions/runs/43317858206 |
-| Run en verde en `main` después de las correcciones | |
+| Run en verde en `main` después de las correcciones | https://github.com/criscal3/INF384-lab5-base/actions/runs/43325420784 |
 | Pull requests del equipo | https://github.com/criscal3/INF384-lab5-base/pull/1<br>https://github.com/criscal3/INF384-lab5-base/pull/2<br>https://github.com/criscal3/INF384-lab5-base/pull/3<br>https://github.com/criscal3/INF384-lab5-base/pull/4 |
+
+### Nota adicional
+
+Alfredo Ernesto Sanchez Tuesta (Alfredo123255) sí realizó su aporte a la Parte B: implementó la unidad 1, el job iac en ci.yml con la política de Checkov de la Decisión 1. El aporte se integró a main el 12/11 a las 17:13 mediante un commit directo, y no mediante un pull request, por lo que no figura en la lista anterior: https://github.com/criscal3/INF384-lab5-base/commit/cd60bf47b2f802e8aa299f5947a374c397b2c823
 
 ## Declaración de uso de IA
 
